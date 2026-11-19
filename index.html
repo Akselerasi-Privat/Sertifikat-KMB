@@ -1,0 +1,916 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Template Sertifikat KMB & Ekstrakurikuler SIMA</title>
+  <!-- Google Fonts Mewah & Profesional -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    /* ==========================================================================
+       1. VARIABEL DESAIN (DESIGN TOKENS)
+       ========================================================================== */
+    :root {
+      --sima-blue: #1b56a7;        /* Biru Utama Logo SIMA */
+      --sima-blue-dark: #0b2447;   /* Royal Dark Navy */
+      --sima-blue-accent: #2563eb;
+      --gold-primary: #c59b27;     /* Warna Emas Utama */
+      --gold-light: #f3e5ab;
+      --gold-gradient: linear-gradient(135deg, #b8860b 0%, #e6ca65 40%, #d4af37 70%, #996515 100%);
+      --paper-bg: #fdfbf7;        /* Warna Kertas Krem Elegan */
+      --text-dark: #111827;
+      --text-muted: #475569;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 24px 14px;
+      background: #e2e8f0;
+      color: var(--text-dark);
+      font-family: 'Plus Jakarta Sans', Arial, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ==========================================================================
+       2. TOOLBAR BAR ATAS
+       ========================================================================== */
+    .toolbar {
+      max-width: 1120px;
+      margin: 0 auto 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      background: #ffffff;
+      padding: 14px 22px;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(11, 36, 71, 0.08);
+      font-size: 13.5px;
+      color: var(--text-muted);
+    }
+
+    .toolbar-info strong {
+      color: var(--sima-blue-dark);
+      font-size: 15px;
+    }
+
+    .actions {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    button, .file-label {
+      border: 0;
+      border-radius: 8px;
+      padding: 10px 18px;
+      background: var(--sima-blue);
+      color: white;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 600;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    button:hover, .file-label:hover {
+      background: var(--sima-blue-dark);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(27, 86, 167, 0.3);
+    }
+
+    button.secondary {
+      background: #ffffff;
+      color: var(--sima-blue-dark);
+      border: 1px solid #cbd5e1;
+    }
+
+    button.secondary:hover {
+      background: #f8fafc;
+      border-color: var(--sima-blue);
+    }
+
+    input[type="file"] { display: none; }
+
+    /* ==========================================================================
+       3. LEMBAR SERTIFIKAT (A4 LANDSCAPE)
+       ========================================================================== */
+    .sheet {
+      max-width: 1120px;
+      margin: auto;
+      overflow: auto;
+      padding-bottom: 20px;
+    }
+
+    .cert {
+      width: 297mm;
+      height: 210mm;
+      margin: auto;
+      background: var(--paper-bg);
+      position: relative;
+      overflow: hidden;
+      padding: 12mm 18mm 10mm;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      isolation: isolate;
+      box-shadow: 0 16px 45px rgba(11, 36, 71, 0.18);
+      border-radius: 4px;
+    }
+
+    /* ==========================================================================
+       4. ORNAMEN LATAR BELAKANG DENGAN WATERMARK LOGO SAMA DENGAN ATAS
+       ========================================================================== */
+    /* Container Watermark Latar Belakang (Mengikuti Logo yang Diunggah) */
+    .bg-watermark {
+      position: absolute;
+      top: 52%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 135mm;
+      height: 135mm;
+      opacity: 0.065;
+      z-index: -1;
+      pointer-events: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .bg-watermark svg, .bg-watermark img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    /* Pola Latar Belakang Fine Dots & Geometric Lines */
+    .bg-pattern {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        radial-gradient(var(--sima-blue) 0.6px, transparent 0.6px), 
+        radial-gradient(var(--gold-primary) 0.6px, var(--paper-bg) 0.6px);
+      background-size: 24px 24px;
+      background-position: 0 0, 12px 12px;
+      opacity: 0.22;
+      z-index: -2;
+    }
+
+    /* Bingkai Bertingkat & Corner Ornaments Mewah */
+    .cert::before {
+      content: "";
+      position: absolute;
+      inset: 5.5mm;
+      border: 2px solid var(--gold-primary);
+      z-index: -1;
+    }
+
+    .cert::after {
+      content: "";
+      position: absolute;
+      inset: 7.5mm;
+      border: 1px dashed rgba(27, 86, 167, 0.45);
+      z-index: -1;
+    }
+
+    .inner-frame {
+      position: absolute;
+      inset: 9.5mm;
+      border: 0.8px solid rgba(197, 155, 39, 0.35);
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Hiasan Samping Kiri & Kanan */
+    .side-ornament-left, .side-ornament-right {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 8mm;
+      height: 110mm;
+      pointer-events: none;
+      opacity: 0.65;
+    }
+    .side-ornament-left { left: 11mm; }
+    .side-ornament-right { right: 11mm; transform: translateY(-50%) scaleX(-1); }
+
+    /* Corner Flourishes (Ornamen 4 Sudut Geometris) */
+    .corner {
+      position: absolute;
+      width: 32mm;
+      height: 32mm;
+      z-index: 1;
+      pointer-events: none;
+    }
+
+    .corner svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .corner.tl { top: 5mm; left: 5mm; }
+    .corner.tr { top: 5mm; right: 5mm; transform: scaleX(-1); }
+    .corner.bl { bottom: 5mm; left: 5mm; transform: scaleY(-1); }
+    .corner.br { bottom: 5mm; right: 5mm; transform: scale(-1); }
+
+    /* Pita Ornamen Atas yang Bisa Diedit Teksnya */
+    .top-ribbon {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 65mm;
+      padding: 0 15px;
+      height: 7mm;
+      background: var(--sima-blue-dark);
+      clip-path: polygon(0 0, 100% 0, 88% 100%, 12% 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+      z-index: 2;
+    }
+
+    .top-ribbon-text {
+      color: var(--gold-light);
+      font-size: 7.5pt;
+      font-family: 'Cinzel', serif;
+      font-weight: 700;
+      letter-spacing: 3px;
+      outline: none;
+      padding: 0 4px;
+      text-transform: uppercase;
+    }
+
+    /* ==========================================================================
+       5. ELEMEN KONTEN SERTIFIKAT
+       ========================================================================== */
+    .header-area {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-top: 3.5mm;
+      position: relative;
+    }
+
+    .logo-container {
+      width: 20mm;
+      height: 20mm;
+      margin-bottom: 1.5mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .logo-container img {
+      max-width: 100%;
+      max-height: 100%;
+      object-fit: contain;
+    }
+
+    .school {
+      font-family: 'Cinzel', serif;
+      font-weight: 800;
+      font-size: 14pt;
+      letter-spacing: 3.5px;
+      color: var(--sima-blue-dark);
+      text-transform: uppercase;
+      line-height: 1.2;
+      outline: none;
+    }
+
+    .sub {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 9.5pt;
+      letter-spacing: 2.5px;
+      color: var(--sima-blue);
+      margin-top: 1mm;
+      text-transform: uppercase;
+      outline: none;
+    }
+
+    .divider {
+      width: 100mm;
+      height: 1.5px;
+      background: var(--gold-gradient);
+      margin: 3.5mm 0 3.5mm;
+      position: relative;
+    }
+
+    .divider::after {
+      content: "✦ ❖ ✦";
+      color: var(--gold-primary);
+      background: var(--paper-bg);
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      padding: 0 4mm;
+      font-size: 9pt;
+      letter-spacing: 2px;
+    }
+
+    /* Judul Utama Sertifikat */
+    h1 {
+      margin: 0;
+      color: var(--sima-blue-dark);
+      font-family: 'Cinzel', serif;
+      font-size: 33pt;
+      font-weight: 900;
+      letter-spacing: 8px;
+      line-height: 1;
+      background: linear-gradient(180deg, #0b2447 0%, #1b56a7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0 1px 1px rgba(0,0,0,0.1));
+    }
+
+    .subtitle {
+      margin-top: 2mm;
+      color: var(--gold-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 10.5pt;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      outline: none;
+    }
+
+    /* Penerima & Teks Pernyataan */
+    .intro {
+      margin-top: 4.5mm;
+      font-family: 'Playfair Display', Georgia, serif;
+      font-style: italic;
+      font-size: 13pt;
+      color: var(--text-muted);
+    }
+
+    /* Wrapper Nama Penerima dengan Aksen Samping */
+    .recipient-wrapper {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 84%;
+      margin: 2mm 0 1.5mm;
+      position: relative;
+    }
+
+    .recipient-flourish {
+      color: var(--gold-primary);
+      font-size: 14pt;
+      user-select: none;
+      padding: 0 8px;
+    }
+
+    .recipient {
+      flex: 1;
+      min-height: 15mm;
+      border-bottom: 2px solid var(--gold-primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--sima-blue-dark);
+      font-family: 'Playfair Display', Georgia, serif;
+      font-size: 27pt;
+      font-weight: 700;
+      outline: none;
+      padding: 0 10px;
+    }
+
+    .recipient:empty:before {
+      content: "";
+      color: #cbd5e1;
+      font-size: 18pt;
+      font-style: italic;
+      font-weight: 400;
+      font-family: 'Playfair Display', serif;
+    }
+
+    .statement {
+      max-width: 222mm;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10.8pt;
+      line-height: 1.65;
+      color: #334155;
+      margin: 2.5mm 0 0;
+      outline: none;
+    }
+
+    .program {
+      display: flex;
+      justify-content: center;
+      gap: 4mm;
+      margin-top: 3mm;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 700;
+      font-size: 13pt;
+      color: var(--sima-blue);
+    }
+
+    .program span {
+      min-width: 90mm;
+      background: rgba(27, 86, 167, 0.05);
+      border-bottom: 1.8px solid var(--gold-primary);
+      border-radius: 4px 4px 0 0;
+      padding: 2mm 8mm 2mm;
+      outline: none;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    .program span:empty:before {
+      content: "Nama KMB / Ekstrakurikuler";
+      color: #94a3b8;
+      font-weight: 400;
+      font-style: italic;
+      font-size: 11pt;
+    }
+
+    .period {
+      margin-top: 2.5mm;
+      font-size: 10pt;
+      font-weight: 600;
+      color: var(--text-muted);
+      letter-spacing: 0.5px;
+      outline: none;
+    }
+
+    /* Bagian Tanda Tangan & Tanggal & Medali Emboss */
+    .bottom {
+      width: 100%;
+      margin-top: auto;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      padding: 0 8mm 1mm;
+      position: relative;
+    }
+
+    .sign {
+      width: 68mm;
+      text-align: center;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10pt;
+      z-index: 2;
+    }
+
+    .role {
+      font-weight: 700;
+      color: var(--sima-blue-dark);
+      min-height: 9mm;
+      line-height: 1.35;
+      font-size: 9.5pt;
+      outline: none;
+    }
+
+    .space {
+      height: 17mm;
+      position: relative;
+    }
+
+    /* Medali Segel Kehormatan Emas (Official Badge Seal) di Tengah */
+    .official-seal {
+      position: absolute;
+      left: 50%;
+      bottom: 2mm;
+      transform: translateX(-50%);
+      width: 26mm;
+      height: 26mm;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .name {
+      border-bottom: 1px solid #94a3b8;
+      padding-bottom: 1.5mm;
+      font-weight: 700;
+      color: var(--sima-blue-dark);
+      outline: none;
+      font-size: 10.5pt;
+    }
+
+    .name:empty:before {
+      content: "Nama dan Gelar Penandatangan";
+      color: #94a3b8;
+      font-style: italic;
+      font-weight: 400;
+      font-size: 9.5pt;
+    }
+
+    .caption {
+      font-size: 8.5pt;
+      color: var(--text-muted);
+      margin-top: 1.5mm;
+      outline: none;
+    }
+
+    .date {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 10pt;
+      color: var(--text-dark);
+      margin-top: 2.5mm;
+      margin-bottom: 2mm;
+      font-weight: 600;
+      outline: none;
+      z-index: 2;
+    }
+
+    /* State Fokus Edit Teks */
+    [contenteditable=true]:focus {
+      background: rgba(197, 155, 39, 0.15);
+      outline: 1.5px dashed var(--gold-primary);
+      border-radius: 3px;
+    }
+
+    .help {
+      max-width: 1050px;
+      margin: 14px auto;
+      color: #475569;
+      font-size: 12.5px;
+      line-height: 1.6;
+      background: #ffffff;
+      padding: 14px 20px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    /* ==========================================================================
+       6. MODAL KONFIRMASI RESET (TANPA ALERT/CONFIRM NATIVE)
+       ========================================================================== */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(11, 36, 71, 0.55);
+      backdrop-filter: blur(3px);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease;
+    }
+
+    .modal-overlay.active {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .modal-box {
+      background: white;
+      padding: 24px 28px;
+      border-radius: 12px;
+      max-width: 420px;
+      width: 90%;
+      box-shadow: 0 20px 40px rgba(0,0,0,0.25);
+      text-align: center;
+    }
+
+    .modal-box h3 {
+      margin: 0 0 10px;
+      color: var(--sima-blue-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 17px;
+    }
+
+    .modal-box p {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin: 0 0 22px;
+      line-height: 1.5;
+    }
+
+    .modal-btns {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+
+    /* ==========================================================================
+       7. SETTING CETAK / PRINT MEDIA
+       ========================================================================== */
+    @page {
+      size: A4 landscape;
+      margin: 0;
+    }
+
+    @media print {
+      body {
+        padding: 0;
+        margin: 0;
+        background: white;
+      }
+
+      .toolbar, .help, .modal-overlay {
+        display: none !important;
+      }
+
+      .sheet {
+        max-width: none;
+        overflow: visible;
+        padding: 0;
+      }
+
+      .cert {
+        margin: 0;
+        box-shadow: none;
+        border-radius: 0;
+        page-break-after: avoid;
+        page-break-inside: avoid;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- TOOLBAR UTAMA -->
+  <div class="toolbar">
+    <div class="toolbar-info">
+      <strong>Template Sertifikat SIMA (Dapat Disesuaikan Semua Jenjang)</strong><br>
+      Klik teks langsung untuk mengedit. Watermark latar belakang otomatis terhubung dengan logo yang diunggah.
+    </div>
+    <div class="actions">
+      <!-- Tombol Unggah Logo -->
+      <label class="file-label secondary" title="Unggah logo sekolah Anda (PNG/JPG)">
+        📷 Ganti Logo
+        <input type="file" id="logoInput" accept="image/*" onchange="handleLogoUpload(event)">
+      </label>
+      <button class="secondary" onclick="openResetModal()">Reset Template</button>
+      <button onclick="window.print()">🖨️ Cetak / Simpan PDF</button>
+    </div>
+  </div>
+
+  <!-- LEMBAR SERTIFIKAT -->
+  <div class="sheet">
+    <main class="cert">
+      
+      <!-- Pola Halus Latar Belakang -->
+      <div class="bg-pattern"></div>
+      
+      <!-- WATERMARK LATAR BELAKANG (OTOMATIS BERUBAH SAAT GANTI LOGO) -->
+      <div class="bg-watermark">
+        <!-- Default Watermark Logo SIMA Presisi -->
+        <svg id="defaultWatermarkSvg" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect x="35" y="35" width="130" height="130" rx="14" stroke="#1b56a7" stroke-width="10" fill="none"/>
+          <rect x="35" y="35" width="130" height="130" rx="14" stroke="#1b56a7" stroke-width="10" fill="none" transform="rotate(45 100 100)"/>
+          <path d="M 68 136 V 96 A 32 32 0 0 1 132 96 V 136 Z" fill="#1b56a7"/>
+          <circle cx="100" cy="80" r="14" fill="#ffffff"/>
+          <ellipse cx="100" cy="82" rx="22" ry="5.5" fill="none" stroke="#1b56a7" stroke-width="3" transform="rotate(-15 100 82)"/>
+          <path d="M 66 126 C 80 120, 95 125, 100 130 C 105 125, 120 120, 134 126 L 134 140 C 120 134, 105 138, 100 143 C 95 138, 80 134, 66 140 Z" fill="#1b56a7"/>
+        </svg>
+        <!-- Custom Watermark Image saat user mengunggah file logo -->
+        <img id="customWatermarkImg" style="display:none;" alt="Watermark Logo">
+      </div>
+
+      <!-- Pita Atas dengan Teks yang BISA DIEDIT (Misal: SD SIMA, SMP SIMA, SMA SIMA) -->
+      <div class="top-ribbon">
+        <div class="top-ribbon-text" contenteditable="true">✦ SMP SIMA ✦</div>
+      </div>
+
+      <!-- Corner Ornaments (Ornamen Sudut Emas Geometris Islami) -->
+      <div class="corner tl">
+        <svg viewBox="0 0 100 100">
+          <path d="M0 0 v38 h7 v-31 h31 v-7 Z M14 14 v20 h5 v-15 h15 v-5 Z M42 0 h6 v7 h-6 Z M0 42 h7 v6 h-7 Z" fill="url(#goldGrad)"/>
+          <circle cx="28" cy="28" r="3" fill="#c59b27"/>
+          <defs>
+            <linearGradient id="goldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#b8860b"/><stop offset="50%" stop-color="#e6ca65"/><stop offset="100%" stop-color="#996515"/>
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+      <div class="corner tr">
+        <svg viewBox="0 0 100 100"><use href="#goldGrad"/><path d="M0 0 v38 h7 v-31 h31 v-7 Z M14 14 v20 h5 v-15 h15 v-5 Z M42 0 h6 v7 h-6 Z M0 42 h7 v6 h-7 Z" fill="url(#goldGrad)"/><circle cx="28" cy="28" r="3" fill="#c59b27"/></svg>
+      </div>
+      <div class="corner bl">
+        <svg viewBox="0 0 100 100"><path d="M0 0 v38 h7 v-31 h31 v-7 Z M14 14 v20 h5 v-15 h15 v-5 Z M42 0 h6 v7 h-6 Z M0 42 h7 v6 h-7 Z" fill="url(#goldGrad)"/><circle cx="28" cy="28" r="3" fill="#c59b27"/></svg>
+      </div>
+      <div class="corner br">
+        <svg viewBox="0 0 100 100"><path d="M0 0 v38 h7 v-31 h31 v-7 Z M14 14 v20 h5 v-15 h15 v-5 Z M42 0 h6 v7 h-6 Z M0 42 h7 v6 h-7 Z" fill="url(#goldGrad)"/><circle cx="28" cy="28" r="3" fill="#c59b27"/></svg>
+      </div>
+
+      <!-- Hiasan Ornamen Samping Kiri & Kanan -->
+      <svg class="side-ornament-left" viewBox="0 0 20 300" fill="none">
+        <line x1="10" y1="0" x2="10" y2="300" stroke="#c59b27" stroke-width="1" stroke-dasharray="4 4"/>
+        <polygon points="10,20 16,30 10,40 4,30" fill="#c59b27"/>
+        <polygon points="10,140 17,150 10,160 3,150" fill="#1b56a7"/>
+        <polygon points="10,260 16,270 10,280 4,270" fill="#c59b27"/>
+      </svg>
+      <svg class="side-ornament-right" viewBox="0 0 20 300" fill="none">
+        <line x1="10" y1="0" x2="10" y2="300" stroke="#c59b27" stroke-width="1" stroke-dasharray="4 4"/>
+        <polygon points="10,20 16,30 10,40 4,30" fill="#c59b27"/>
+        <polygon points="10,140 17,150 10,160 3,150" fill="#1b56a7"/>
+        <polygon points="10,260 16,270 10,280 4,270" fill="#c59b27"/>
+      </svg>
+      
+      <div class="inner-frame"></div>
+
+      <!-- HEADER LOGO & NAMA SEKOLAH -->
+      <div class="header-area">
+        <div class="logo-container" id="logoContainer" title="Klik tombol 'Ganti Logo' di atas untuk mengganti logo">
+          <!-- Logo Vektor Default SIMA -->
+          <svg id="defaultLogoSvg" width="75" height="75" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="simaBlueGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#2563eb"/>
+                <stop offset="100%" stop-color="#1d4ed8"/>
+              </linearGradient>
+            </defs>
+            <!-- Bintang 8 Outer Frame -->
+            <rect x="35" y="35" width="130" height="130" rx="14" stroke="#1b56a7" stroke-width="11" fill="none"/>
+            <rect x="35" y="35" width="130" height="130" rx="14" stroke="#1b56a7" stroke-width="11" fill="none" transform="rotate(45 100 100)"/>
+            
+            <!-- Kubah / Arch -->
+            <path d="M 68 136 V 96 A 32 32 0 0 1 132 96 V 136 Z" fill="url(#simaBlueGrad)"/>
+            
+            <!-- Planet & Cincin -->
+            <circle cx="100" cy="80" r="14" fill="#ffffff"/>
+            <ellipse cx="100" cy="82" rx="22" ry="5.5" fill="none" stroke="#1b56a7" stroke-width="3.5" transform="rotate(-15 100 82)"/>
+            
+            <!-- Kitab Terbuka -->
+            <path d="M 66 126 C 80 120, 95 125, 100 130 C 105 125, 120 120, 134 126 L 134 140 C 120 134, 105 138, 100 143 C 95 138, 80 134, 66 140 Z" fill="#1d4ed8"/>
+            <path d="M 68 123 C 82 117, 95 121, 100 126 C 105 121, 118 117, 132 123 L 132 135 C 118 129, 105 133, 100 138 C 95 133, 82 129, 68 135 Z" fill="#3b82f6"/>
+            <line x1="100" y1="126" x2="100" y2="138" stroke="#ffffff" stroke-width="2.5"/>
+          </svg>
+          <!-- Gambar Logo Unggahan Pengguna -->
+          <img id="customLogoImg" style="display:none;" alt="Logo Sekolah">
+        </div>
+
+        <!-- Nama Sekolah (Bisa Diedit) -->
+        <div class="school" contenteditable="true">SEKOLAH ISLAM MUHAMMAD AL-FATIH</div>
+        <div class="sub" contenteditable="true">SMP SIMA</div>
+      </div>
+
+      <div class="divider"></div>
+
+      <!-- JUDUL SERTIFIKAT -->
+      <h1>SERTIFIKAT</h1>
+      <div class="subtitle" contenteditable="true">Apresiasi Partisipasi &amp; Pengembangan Potensi</div>
+
+      <!-- NAMA PENERIMA -->
+      <div class="intro">Diberikan kepada:</div>
+      
+      <div class="recipient-wrapper">
+        <span class="recipient-flourish">꧁</span>
+        <div class="recipient" contenteditable="true"></div>
+        <span class="recipient-flourish">꧂</span>
+      </div>
+
+      <!-- ISYARAT PERNYATAAN -->
+      <div class="statement" contenteditable="true">
+        Sebagai bentuk apresiasi atas partisipasi aktif, semangat belajar, dan keterlibatan sungguh-sungguh dalam mengembangkan minat, bakat, serta potensi diri melalui kegiatan:
+      </div>
+
+      <!-- PROGRAM KMB / EKSTRAKURIKULER -->
+      <div class="program">
+        <span contenteditable="true"></span>
+      </div>
+      
+      <div class="period" contenteditable="true">Tahun Ajaran 2026/2027</div>
+
+      <!-- Tanggal Dipindahkan ke Atas Area Tanda Tangan (Terpisah dan Bebas Halangan) -->
+      <div class="date" contenteditable="true">Pontianak, __________________ 2027</div>
+
+      <!-- TANDA TANGAN & MEDALI SEGEL RESMI -->
+      <div class="bottom">
+        <!-- Tanda Tangan Kiri -->
+        <div class="sign">
+          <div class="role" contenteditable="true">Tutor / Pembina</div>
+          <div class="space"></div>
+          <div class="name" contenteditable="true"></div>
+          <div class="caption" contenteditable="true">Tutor KMB / Ekstrakurikuler</div>
+        </div>
+
+        <!-- Segel Emas Medali Kehormatan di Tengah Bawah -->
+        <div class="official-seal">
+          <svg viewBox="0 0 100 100" width="100%" height="100%">
+            <!-- Ribbon Tails -->
+            <path d="M30 70 L20 95 L35 88 L45 95 L40 70 Z" fill="#b8860b"/>
+            <path d="M70 70 L60 95 L65 88 L80 95 L70 70 Z" fill="#996515"/>
+            <!-- Starburst Badge Outer -->
+            <circle cx="50" cy="50" r="38" fill="url(#goldGrad)"/>
+            <circle cx="50" cy="50" r="32" fill="#0b2447"/>
+            <circle cx="50" cy="50" r="30" stroke="#e6ca65" stroke-width="1" fill="none"/>
+            <path d="M50 26 L53 34 L62 34 L55 39 L57 47 L50 42 L43 47 L45 39 L38 34 L47 34 Z" fill="#e6ca65"/>
+            <text x="50" y="58" font-family="'Cinzel', serif" font-size="6" fill="#ffffff" text-anchor="middle" font-weight="bold" letter-spacing="1">EXCELLENCE</text>
+            <text x="50" y="64" font-family="'Plus Jakarta Sans', sans-serif" font-size="4" fill="#e6ca65" text-anchor="middle" letter-spacing="0.5">OFFICIAL SEAL</text>
+          </svg>
+        </div>
+
+        <!-- Tanda Tangan Kanan -->
+        <div class="sign">
+          <div class="role" contenteditable="true">Wakil Kepala Sekolah<br>Bidang Kesiswaan</div>
+          <div class="space"></div>
+          <div class="name" contenteditable="true"></div>
+          <div class="caption" contenteditable="true">Sekolah Islam Muhammad Fatih</div>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- PETUNJUK PENGGUNAAN -->
+  <p class="help">
+    <strong>💡 Petunjuk Penggunaan:</strong><br>
+    • <strong>Pita Atas &amp; Semua Teks</strong> dapat diklik langsung untuk diganti (misal mengubah <code>SMP SIMA</code> menjadi <code>SD SIMA</code> atau <code>SMA SIMA</code>).<br>
+    • Klik <strong>"📷 Ganti Logo"</strong> untuk mengunggah logo sekolah baru. Logo di bagian atas dan **watermark latar belakang akan otomatis berubah mengikuti logo yang diunggah**.<br>
+    • Saat menyimpan PDF: Pilih <strong>Cetak / Simpan PDF</strong> &gt; orientasi <strong>Landscape</strong> &gt; centang <strong>Grafik Latar Belakang (Background Graphics)</strong> agar warna emas dan ornamen ikut tercetak dengan sempurna.
+  </p>
+
+  <!-- MODAL KONFIRMASI RESET -->
+  <div class="modal-overlay" id="resetModal">
+    <div class="modal-box">
+      <h3>Kembalikan ke Template Awal?</h3>
+      <p>Semua teks yang telah Anda ubah dan logo yang diunggah akan dikembalikan ke setelan awal SMP SIMA.</p>
+      <div class="modal-btns">
+        <button class="secondary" onclick="closeResetModal()">Batal</button>
+        <button onclick="confirmReset()">Ya, Reset</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Fungsi Manajemen Modal Konfirmasi Reset
+    function openResetModal() {
+      document.getElementById('resetModal').classList.add('active');
+    }
+
+    function closeResetModal() {
+      document.getElementById('resetModal').classList.remove('active');
+    }
+
+    function confirmReset() {
+      // Reset Teks Pita & Header
+      document.querySelector('.top-ribbon-text').textContent = '✦ SMP SIMA ✦';
+      document.querySelector('.school').textContent = 'SEKOLAH ISLAM MUHAMMAD FATIH';
+      document.querySelector('.sub').textContent = 'SMP SIMA';
+      document.querySelector('.subtitle').textContent = 'Apresiasi Partisipasi & Pengembangan Potensi';
+      document.querySelector('.recipient').textContent = '';
+      document.querySelector('.statement').textContent = 'Sebagai bentuk apresiasi atas partisipasi aktif, semangat belajar, dan keterlibatan sungguh-sungguh dalam mengembangkan minat, bakat, serta potensi diri melalui kegiatan:';
+      document.querySelector('.program span').textContent = '';
+      document.querySelector('.period').textContent = 'Tahun Ajaran 2026/2027';
+      
+      const names = document.querySelectorAll('.sign .name');
+      names.forEach(el => el.textContent = '');
+      
+      document.querySelector('.date').textContent = 'Pontianak, __________________ 2027';
+
+      // Reset Logo Atas & Watermark Latar ke Default SVG
+      document.getElementById('defaultLogoSvg').style.display = 'block';
+      document.getElementById('customLogoImg').style.display = 'none';
+      document.getElementById('customLogoImg').src = '';
+
+      document.getElementById('defaultWatermarkSvg').style.display = 'block';
+      document.getElementById('customWatermarkImg').style.display = 'none';
+      document.getElementById('customWatermarkImg').src = '';
+
+      document.getElementById('logoInput').value = '';
+
+      closeResetModal();
+    }
+
+    // Fungsi Upload Logo (Satu Kali Upload Mengubah Logo Atas AND Watermark Latar Belakang)
+    function handleLogoUpload(event) {
+      const file = event.target.files[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+          const imageSrc = e.target.result;
+          
+          // 1. Update Logo Atas Header
+          document.getElementById('defaultLogoSvg').style.display = 'none';
+          const customLogo = document.getElementById('customLogoImg');
+          customLogo.src = imageSrc;
+          customLogo.style.display = 'block';
+
+          // 2. Update Watermark Latar Belakang Otomatis
+          document.getElementById('defaultWatermarkSvg').style.display = 'none';
+          const customWm = document.getElementById('customWatermarkImg');
+          customWm.src = imageSrc;
+          customWm.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+      }
+    }
+  </script>
+</body>
+</html>
